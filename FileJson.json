@@ -1,0 +1,491 @@
+[
+    {
+        "id": "971f940ec05f36cb",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "8125e1c99c6344ef",
+        "type": "mqtt in",
+        "z": "971f940ec05f36cb",
+        "name": "connect TTN",
+        "topic": "#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "f2d3908a74072800",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 310,
+        "y": 240,
+        "wires": [
+            [
+                "7e14a3ffe891bd76"
+            ]
+        ]
+    },
+    {
+        "id": "7e14a3ffe891bd76",
+        "type": "function",
+        "z": "971f940ec05f36cb",
+        "name": "getPayload",
+        "func": "\n\n// bytes to Sting converter\nvar end_device_ids = msg.payload.end_device_ids.device_id;\nvar decoded_payload = msg.payload.uplink_message.decoded_payload;\nvar msg ={\n    \"end_device_ids\": end_device_ids,\n    \"decoded_payload\": decoded_payload\n}\nreturn msg;\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 240,
+        "wires": [
+            [
+                "b6a70c19ce8e5dfa"
+            ]
+        ]
+    },
+    {
+        "id": "b6a70c19ce8e5dfa",
+        "type": "function",
+        "z": "971f940ec05f36cb",
+        "name": "Location/Baterry",
+        "func": "var device_id = msg.end_device_ids;\nvar latitude = msg.decoded_payload.latitude;\nvar longitude = msg.decoded_payload.longitude;\nvar estado_bateria = msg.decoded_payload.estado_bateria;\nvar trafego_utilizacao = msg.decoded_payload.trafego_utilizacao;\n\nmsg.payload ={\n    \"name\" : device_id,\n    \"lat\": latitude,\n    \"lon\": longitude,\n    \"icon\": \":vertical_traffic_light\",\n    \"Baterry\": estado_bateria + \"%\",\n    \"trafego_utilizacao\": trafego_utilizacao\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 240,
+        "wires": [
+            [
+                "7c72267a91e3395f"
+            ]
+        ]
+    },
+    {
+        "id": "8808b97fab5ca7e9",
+        "type": "inject",
+        "z": "971f940ec05f36cb",
+        "name": "Start",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 390,
+        "y": 360,
+        "wires": [
+            [
+                "10d1961f9b47388f"
+            ]
+        ]
+    },
+    {
+        "id": "ade30512a3f2f61e",
+        "type": "file",
+        "z": "971f940ec05f36cb",
+        "name": "Location/Baterry/saveDate.txt",
+        "filename": "/usr/src/node-red/dadosTTN/locationBaterry.txt",
+        "filenameType": "str",
+        "appendNewline": true,
+        "createDir": true,
+        "overwriteFile": "false",
+        "encoding": "utf8",
+        "x": 910,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "10d1961f9b47388f",
+        "type": "file in",
+        "z": "971f940ec05f36cb",
+        "name": "",
+        "filename": "/usr/src/node-red/dadosTTN/locationBaterry.txt",
+        "filenameType": "str",
+        "format": "",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 620,
+        "y": 360,
+        "wires": [
+            [
+                "0ccd27762b631081"
+            ]
+        ]
+    },
+    {
+        "id": "7c72267a91e3395f",
+        "type": "json",
+        "z": "971f940ec05f36cb",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 730,
+        "y": 240,
+        "wires": [
+            [
+                "ade30512a3f2f61e"
+            ]
+        ]
+    },
+    {
+        "id": "561eca3096edce21",
+        "type": "ui_worldmap",
+        "z": "971f940ec05f36cb",
+        "group": "08a8efd90a125c9c",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "lat": "38.756289904614285",
+        "lon": "-9.116206120953649",
+        "zoom": "14",
+        "layer": "OSMC",
+        "cluster": "",
+        "maxage": "",
+        "usermenu": "hide",
+        "layers": "show",
+        "panit": "false",
+        "panlock": "false",
+        "zoomlock": "false",
+        "hiderightclick": "true",
+        "coords": "none",
+        "showgrid": "false",
+        "showruler": "false",
+        "allowFileDrop": "false",
+        "path": "/worldmap",
+        "overlist": "DR,CO,RA,DN,HM",
+        "maplist": "OSMG,OSMC,EsriC,EsriS,EsriT,EsriDG,UKOS",
+        "mapname": "",
+        "mapurl": "",
+        "mapopt": "",
+        "mapwms": false,
+        "x": 1240,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "0ccd27762b631081",
+        "type": "function",
+        "z": "971f940ec05f36cb",
+        "name": "Buffer to Text",
+        "func": "msg.payload = msg.payload.toString('utf8');\n\nif (msg.payload.trim() !== '') {\n    // Separa as linhas da string\n    const lines = msg.payload.trim().split('\\n');\n    const locations = lines.map(line => {\n        try {\n            // Parseia cada linha como JSON\n            const data = JSON.parse(line.trim());\n            // Retorna o objeto com os campos necessários\n            return {\n                name: data.name,\n                lat: data.lat,\n                lon: data.lon,\n                icon: data.icon,\n                Baterry: \"🔋 \" + data.Baterry ,\n                trafego_utilizacao: data.trafego_utilizacao\n\n            };\n        } catch (e) {\n            console.error('Erro ao parsear JSON:', e, 'Linha:', line);\n            return null;\n        }\n    }).filter(item => item !== null); // Filtra nulos (linhas que falharam ao fazer o parse)\n\n    // Atribui o array de objetos ao payload\n    msg.payload = locations;\n    return msg;\n} else {\n    // Retorna null se o payload estiver vazio\n    return null;\n}\n\n// Verifica se o payload não está vazio\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 870,
+        "y": 360,
+        "wires": [
+            [
+                "ee93b6f7d87449be"
+            ]
+        ]
+    },
+    {
+        "id": "ee93b6f7d87449be",
+        "type": "ui_template",
+        "z": "971f940ec05f36cb",
+        "group": "ui_group_id",
+        "name": "Tabela com Links",
+        "order": 1,
+        "width": 12,
+        "height": 5,
+        "format": "<table style=\"margin: auto;\" ng-if=\"msg.payload\">\n  <thead>\n    <tr>\n      <th style=\"text-align: center;\">Device_Id</th>\n      <th style=\"text-align: center;\">Battery</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr ng-repeat=\"item in msg.payload\">\n      <td style=\"text-align: center;\"><a href=\"\" ng-click=\"send({payload: item})\">{{item.name}}</a></td>\n      <td style=\"text-align: center;\">{{item.Baterry}}</td>\n    </tr>\n  </tbody>\n</table>\n<div ng-if=\"!msg.payload || msg.payload.length === 0\" style=\"text-align: center;\">No data available</div>",
+        "storeOutMessages": false,
+        "fwdInMessages": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 750,
+        "y": 460,
+        "wires": [
+            [
+                "c51bd84cc0eafe3b",
+                "13414e9a3941ae10"
+            ]
+        ]
+    },
+    {
+        "id": "c51bd84cc0eafe3b",
+        "type": "function",
+        "z": "971f940ec05f36cb",
+        "name": "Processar Clique",
+        "func": "var selected = msg.payload;\nvar lat = selected.lat;\nvar lon = selected.lon;\n\nmsg.payload = {\n    \"name\": selected.name,\n    \"lat\": lat,\n    \"lon\": lon,\n    \"icon\": \"https://static.vecteezy.com/system/resources/previews/014/545/648/original/garbage-container-icon-simple-style-vector.jpg\"\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1030,
+        "y": 460,
+        "wires": [
+            [
+                "561eca3096edce21"
+            ]
+        ]
+    },
+    {
+        "id": "2b1ca7be3c74cc3a",
+        "type": "ui_gauge",
+        "z": "971f940ec05f36cb",
+        "name": "",
+        "group": "ui_group_id",
+        "order": 3,
+        "width": 6,
+        "height": 5,
+        "gtype": "gage",
+        "title": "Nivel de Enchimento",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "45",
+        "seg2": "75",
+        "diff": false,
+        "className": "",
+        "x": 960,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "13414e9a3941ae10",
+        "type": "function",
+        "z": "971f940ec05f36cb",
+        "name": "getPay",
+        "func": "\nmsg.payload = msg.payload.trafego_utilizacao;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 600,
+        "wires": [
+            [
+                "2b1ca7be3c74cc3a"
+            ]
+        ]
+    },
+    {
+        "id": "a49c4fc3108596bf",
+        "type": "inject",
+        "z": "971f940ec05f36cb",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 420,
+        "y": 440,
+        "wires": [
+            [
+                "ee93b6f7d87449be"
+            ]
+        ]
+    },
+    {
+        "id": "2c9fbd909ee0b724",
+        "type": "ui_spacer",
+        "z": "971f940ec05f36cb",
+        "name": "spacer",
+        "group": "ui_group_id",
+        "order": 2,
+        "width": 3,
+        "height": 1
+    },
+    {
+        "id": "72d7b6757ebdcd8b",
+        "type": "ui_spacer",
+        "z": "971f940ec05f36cb",
+        "name": "spacer",
+        "group": "ui_group_id",
+        "order": 4,
+        "width": 3,
+        "height": 1
+    },
+    {
+        "id": "86efd4171dfb7f45",
+        "type": "ui_spacer",
+        "z": "971f940ec05f36cb",
+        "name": "spacer",
+        "group": "ui_group_id",
+        "order": 5,
+        "width": 3,
+        "height": 1
+    },
+    {
+        "id": "6a8f8e51c3a5cb12",
+        "type": "ui_spacer",
+        "z": "971f940ec05f36cb",
+        "name": "spacer",
+        "group": "ui_group_id",
+        "order": 6,
+        "width": 3,
+        "height": 1
+    },
+    {
+        "id": "b156b560862455fe",
+        "type": "ui_spacer",
+        "z": "971f940ec05f36cb",
+        "name": "spacer",
+        "group": "ui_group_id",
+        "order": 7,
+        "width": 3,
+        "height": 1
+    },
+    {
+        "id": "7fd9c5bd72ad8af5",
+        "type": "ui_spacer",
+        "z": "971f940ec05f36cb",
+        "name": "spacer",
+        "group": "ui_group_id",
+        "order": 8,
+        "width": 3,
+        "height": 1
+    },
+    {
+        "id": "ab2ac70cae7fa39b",
+        "type": "ui_spacer",
+        "z": "971f940ec05f36cb",
+        "name": "spacer",
+        "group": "ui_group_id",
+        "order": 9,
+        "width": 3,
+        "height": 1
+    },
+    {
+        "id": "f6ef8985dd47d0a9",
+        "type": "ui_spacer",
+        "z": "971f940ec05f36cb",
+        "name": "spacer",
+        "group": "ui_group_id",
+        "order": 10,
+        "width": 3,
+        "height": 1
+    },
+    {
+        "id": "d4494c2a209ccc53",
+        "type": "ui_spacer",
+        "z": "971f940ec05f36cb",
+        "name": "spacer",
+        "group": "ui_group_id",
+        "order": 11,
+        "width": 3,
+        "height": 1
+    },
+    {
+        "id": "dcdc0363d835eb56",
+        "type": "ui_spacer",
+        "z": "971f940ec05f36cb",
+        "name": "spacer",
+        "group": "ui_group_id",
+        "order": 12,
+        "width": 3,
+        "height": 1
+    },
+    {
+        "id": "f2d3908a74072800",
+        "type": "mqtt-broker",
+        "name": "teste",
+        "broker": "eu1.cloud.thethings.network",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "08a8efd90a125c9c",
+        "type": "ui_group",
+        "name": "mapa",
+        "tab": "3979052e16493f8d",
+        "order": 1,
+        "disp": true,
+        "width": "15",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "ui_group_id",
+        "type": "ui_group",
+        "name": "Devices",
+        "tab": "3979052e16493f8d",
+        "order": 1,
+        "disp": true,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "3979052e16493f8d",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
